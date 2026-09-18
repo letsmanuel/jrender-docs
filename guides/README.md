@@ -3,6 +3,7 @@
 Practical, task-oriented documentation for using JRender in a game project.
 
 - [Install and create your first game](getting-started.md)
+- [Best practices](best-practices.md)
 - [Build a scene](scene-basics.md)
 - [Build a GUI](gui.md)
 - [Add audio and saved settings](audio-and-persistence.md)

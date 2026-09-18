@@ -46,3 +46,7 @@ float result = instance.volume(id);
 
 When modifying code that calls `volume`, preserve argument order and types, search existing call sites first, keep lifecycle ownership explicit, and update this page if behavior changes.
 
+
+### Sample hygiene
+
+For production code, replace placeholder values with named constants or a configuration object. Keep units explicit in names such as FADE_DURATION_SECONDS, BUTTON_WIDTH, or MOVE_UNITS_PER_SECOND.

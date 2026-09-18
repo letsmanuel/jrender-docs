@@ -19,3 +19,19 @@ panel.add(label);
 ## World GUI space
 
 `WorldGui` anchors a screen-sized GUI to a 3D position and updates it from the active camera. Use it for labels, panels, or interaction surfaces placed in the world.
+
+## Layout constants
+
+Keep the reference resolution and recurring spacing values together:
+
+```java
+final class UiLayout {
+    static final float REFERENCE_WIDTH = 1280.0f;
+    static final float REFERENCE_HEIGHT = 720.0f;
+    static final float OUTER_MARGIN = 32.0f;
+    static final float ROW_GAP = 16.0f;
+    static final float CONTROL_HEIGHT = 42.0f;
+}
+```
+
+This makes a resize or visual redesign a data change instead of a search through unrelated event handlers.

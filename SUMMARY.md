@@ -6,6 +6,7 @@
 
 * [Guides](guides/README.md)
   * [Install and create your first game](guides/getting-started.md)
+  * [Best practices](guides/best-practices.md)
   * [Build a scene](guides/scene-basics.md)
   * [Build a GUI](guides/gui.md)
   * [Add audio and saved settings](guides/audio-and-persistence.md)

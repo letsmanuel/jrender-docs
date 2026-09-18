@@ -11,10 +11,11 @@ JRender is a Java/LWJGL engine for building real-time 3D scenes, responsive 2D i
 ## Start here
 
 1. [Install and create your first game](guides/getting-started.md)
-2. [Understand the engine model](theory/engine-model.md)
-3. [Build a scene](guides/scene-basics.md)
-4. [Build a GUI](guides/gui.md)
-5. [Add audio and saved settings](guides/audio-and-persistence.md)
+2. [Best practices](guides/best-practices.md)
+3. [Understand the engine model](theory/engine-model.md)
+4. [Build a scene](guides/scene-basics.md)
+5. [Build a GUI](guides/gui.md)
+6. [Add audio and saved settings](guides/audio-and-persistence.md)
 
 ## Reference
 

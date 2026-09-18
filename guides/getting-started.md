@@ -16,12 +16,23 @@ A minimal game creates an `EngineConfig`, supplies a `GameLogic` implementation,
 
 ```java
 public final class Main {
+    private static final String WINDOW_TITLE = "My Game";
+    private static final int WINDOW_WIDTH = 1280;
+    private static final int WINDOW_HEIGHT = 720;
+    private static final boolean ENABLE_VSYNC = true;
+    private static final String MAIN_SCENE = "main";
+
     public static void main(String[] args) {
-        EngineConfig config = new EngineConfig("My Game", 1280, 720, true);
+        EngineConfig config = new EngineConfig(
+                WINDOW_TITLE,
+                WINDOW_WIDTH,
+                WINDOW_HEIGHT,
+                ENABLE_VSYNC
+        );
         new Engine(config).run(new GameLogic() {
             @Override
             public void init(Engine engine) {
-                engine.createScene("main");
+                engine.createScene(MAIN_SCENE);
             }
 
             @Override
@@ -36,3 +47,20 @@ public final class Main {
 Resources use classpath paths: shaders under `/shaders/`, sounds under `/sounds/`, and other assets under the resource root.
 
 Use `Engine.getFPS()` for the current measured frame rate. Dispose the engine once at shutdown.
+
+## Recommended project structure
+
+```text
+src/main/java/
+  game/
+    Main.java
+    Game.java
+    world/
+    ui/
+src/main/resources/
+  shaders/
+  sounds/
+  textures/
+```
+
+Keep game-specific code outside the engine package. Store resource IDs and tuning values in named constants or configuration classes instead of repeating literals.

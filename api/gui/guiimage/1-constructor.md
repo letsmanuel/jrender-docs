@@ -42,3 +42,7 @@ GuiImage instance = new GuiImage(Texture texture, float x, float y, float w, flo
 
 Preserve constructor argument order, validate inputs at the call site, and follow the declaring type lifecycle rules.
 
+
+### Sample hygiene
+
+For production code, replace placeholder values with named constants or a configuration object. Keep units explicit in names such as FADE_DURATION_SECONDS, BUTTON_WIDTH, or MOVE_UNITS_PER_SECOND.
