@@ -1,3 +1,6 @@
-root: ./
+site:
+  title: JRender Engine Documentation
+  description: Complete API and usage documentation for the Letsmanuel JRender engine version 1.0.
+  url: https://github.com/letsmanuel/jrender-docs
 structure:
   summary: SUMMARY.md
