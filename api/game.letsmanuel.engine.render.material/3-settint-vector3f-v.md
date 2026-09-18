@@ -1,0 +1,48 @@
+﻿# `setTint`
+
+**Declaring type:** [Material](./README.md)  
+**Visibility:** `public`  
+**Signature:** `public Material setTint(Vector3f v)`
+
+## What it does
+
+This function belongs to `game.letsmanuel.engine.render.Material` and performs the operation represented by `setTint`. Use it according to the lifecycle and ownership rules of the declaring type.
+
+## Arguments
+
+| Name | Type | Detail |
+|---|---|---|
+| `v` | `Vector3f` | Caller-supplied input; verify range, units, lifecycle, and nullability. |
+
+### Argument details
+
+- `Vector3f v`: validate type, range, coordinate space, ownership, and nullability before calling.
+
+## Return value
+
+Returns a value of type `Material`.
+
+## Code sample
+
+```java
+// Obtain or construct the owning instance before this call.
+Material result = instance.setTint(v);
+```
+
+## Common issues
+
+- Calling before the owning subsystem is initialized.
+- Passing values in the wrong coordinate space, unit, or range.
+- Retaining native resources after their owner is disposed.
+- Assuming a fluent return when the declared return type is `void`.
+
+## Template
+
+```java
+Material result = instance.setTint(v);
+```
+
+## Agent instructions
+
+When modifying code that calls `setTint`, preserve argument order and types, search existing call sites first, keep lifecycle ownership explicit, and update this page if behavior changes.
+
