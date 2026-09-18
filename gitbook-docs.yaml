@@ -1,6 +1,11 @@
+﻿$schema: https://api.gitbook.com/gitbook-docs.yaml
 site:
   title: JRender Engine Documentation
-  description: Complete API and usage documentation for the Letsmanuel JRender engine version 1.0.
-  url: https://github.com/letsmanuel/jrender-docs
-structure:
-  summary: SUMMARY.md
+  structure:
+    - type: space
+      key: documentation
+      title: JRender Engine Documentation
+      path: .
+      default: true
+      content:
+        directory: .
