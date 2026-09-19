@@ -50,6 +50,26 @@ PhysicsBody crate = scene.physics().addDynamicBody(
 
 `AUTO` chooses a triangle mesh for small meshes and a convex-hull representation for larger meshes. `BOX`, `SPHERE`, `CAPSULE`, `CONVEX_HULL`, and `TRIANGLE_MESH` can be selected manually. The solver uses conservative AABB broad-phase checks, then uses oriented-box contacts for rotated box colliders so thin slopes do not become tall invisible walls.
 
+### Shape factories
+
+Use explicit shapes when the visual mesh is too detailed for a useful collider:
+
+```java
+CollisionShape box = CollisionShape.box(0.5f, 0.5f, 0.5f);
+CollisionShape sphere = CollisionShape.sphere(0.4f);
+CollisionShape capsule = CollisionShape.capsule(0.35f, 1.8f);
+CollisionShape hull = CollisionShape.convexHull(vertices);
+CollisionShape mesh = CollisionShape.triangleMesh(renderMesh);
+```
+
+The box values are half-extents. Capsule height includes its full end-to-end
+height. Convex-hull vertices must contain complete XYZ triples. A shape can be
+copied for an object scale with `shape.scaled(scale)`; scaling uses absolute
+axis values and does not mutate the original shape.
+
+`CollisionShape.type()`, `halfExtents()`, `center()`, `radius()`, `height()`,
+`boundingRadius()`, and `volume()` are available for inspection and mass setup.
+
 ## Ramps and multiple floors
 
 Ramps are ordinary render objects with ordinary static collision bodies. There is no special height function and no position snapping. Build the ramp mesh, register it as a static collider, and let gravity and collision resolution determine the body's motion.
@@ -77,6 +97,10 @@ lift.setPosition(pathX, pathY, pathZ);
 ```
 
 Kinematic bodies are not integrated by gravity and cannot be pushed by dynamic bodies. Move their position from game code; the solver still includes them in collision detection.
+
+Kinematic bodies are useful for lifts, doors, and moving platforms. Set their
+position each update rather than applying forces and do not expect dynamic
+objects to transfer momentum into them.
 
 ## Assembling and disassembling physics
 
@@ -124,7 +148,43 @@ body.setGravityScale(0.5f);
 body.addForce(0f, 120f, 0f);
 ```
 
-The solver uses semi-implicit Euler integration with fixed maximum substeps, then resolves contacts using restitution, friction configuration, and positional correction. Dynamic bodies use a positive mass; mass `0` makes a body static.
+The solver uses semi-implicit Euler integration with fixed maximum substeps,
+normal impulses, positional correction, and a configurable solver iteration
+count:
+
+```java
+physics.setSolverIterations(6);
+int iterations = physics.solverIterations();
+```
+
+Restitution controls bounce. Friction is stored on bodies for material
+configuration and future friction response, but the current contact solver does
+not yet apply tangential friction impulses. Dynamic bodies use positive mass;
+mass `0` makes a body static. Kinematic bodies report zero inverse mass and are
+not integrated.
+
+`setGravityScale` multiplies world gravity. `setGravity(value)` on a body is a
+convenience that converts acceleration in world units into a gravity scale.
+
+## Contacts
+
+`PhysicsWorld.contacts()` returns the contacts generated during the most recent
+step. Each `PhysicsContact` contains the two bodies, an approximate contact
+point, a separating normal, and penetration depth:
+
+```java
+physics.step(dt);
+for (PhysicsContact contact : physics.contacts()) {
+    PhysicsBody first = contact.first();
+    PhysicsBody second = contact.second();
+    Vector3f normal = contact.normal();
+    float penetration = contact.penetration();
+}
+```
+
+The list is replaced on the next step. Copy values you need after the frame.
+Contacts are generated for overlapping collider pairs that have a nonzero
+inverse-mass sum; two static bodies do not receive a resolving impulse.
 
 ## Frame-rate safety
 
@@ -137,3 +197,9 @@ The world subdivides large frame deltas into 1/60-second maximum steps. Keep mov
 - Using `TRIANGLE_MESH` for every object instead of selecting a cheaper LOD for dynamic bodies.
 - Creating a visible ramp without adding a matching static collider.
 - Adding a dynamic body with mass `0`; that makes it static by design.
+- Expecting `setFriction` to change motion; tangential friction impulses are not
+  implemented by the current solver.
+- Calling `physics.step` manually in an engine-managed scene and advancing the
+  same world twice.
+- Expecting angular velocity or rotational rigid-body dynamics; rotation is
+  authored through the associated `GameObject` transform.

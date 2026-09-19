@@ -36,3 +36,4 @@
   * [Scenes and world objects](api/scene/README.md)
   * [Audio and persistence](api/audio/README.md)
   * [Utilities, lighting, and ray casting](api/utilities/README.md)
+  * [Physics API](api/physics/README.md)
