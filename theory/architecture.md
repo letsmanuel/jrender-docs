@@ -1,16 +1,19 @@
 # Architecture
 
-`Engine` owns the main loop and coordinates `Window`, `Renderer`, `GuiRenderer`, `SceneManager`, `SettingsStore`, `SoundEngine`, and world GUIs. `Scene` owns world state, cameras, lights, and objects. GUI is a retained tree with parent-relative coordinates, animation, hit testing, clipping, tooltips, and responsive scaling. Rendering and audio use native OpenGL and OpenAL resources and must follow lifecycle rules.
+`Engine` owns the main loop and coordinates `Window`, `Renderer`, `GuiRenderer`,
+`SceneManager`, `SettingsStore`, `SoundEngine`, and world GUIs. `Scene` owns
+world state, cameras, lights, objects, physics, and one `ParticleSystem`.
 
-## Dependency direction
+The renderer has these broad passes:
 
-Prefer dependencies that point toward the engine services:
+1. directional shadow map;
+2. opaque and masked lit objects;
+3. sorted alpha-blended objects;
+4. instanced particles;
+5. skybox;
+6. bloom extraction, blur, and composite;
+7. world and root GUI.
 
-```text
-GameLogic -> Engine services
-Engine    -> Window, Renderer, GUI, SceneManager, Audio, Settings
-Renderer  -> Scene data and GPU resources
-GUI       -> Window input and renderer output
-```
-
-Keep gameplay rules in game code. Keep reusable rendering, GUI, audio, and persistence behavior in engine services. Avoid making a renderer know about a specific game screen or making a GUI callback contain scene-generation logic.
+GUI is a retained tree with parent-relative coordinates, animation, hit testing,
+clipping, tooltips, and responsive scaling. Rendering, audio, Assimp, and
+texture resources use native APIs and must follow lifecycle and thread rules.

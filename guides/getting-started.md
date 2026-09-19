@@ -15,31 +15,18 @@ dependencies {
 A minimal game creates an `EngineConfig`, supplies a `GameLogic` implementation, creates a scene, and calls `Engine.run`. Initialize game-owned resources in `GameLogic.init` and update gameplay in `GameLogic.update`.
 
 ```java
-public final class Main {
-    private static final String WINDOW_TITLE = "My Game";
-    private static final int WINDOW_WIDTH = 1280;
-    private static final int WINDOW_HEIGHT = 720;
-    private static final boolean ENABLE_VSYNC = true;
-    private static final String MAIN_SCENE = "main";
+public final class SampleGame implements GameLogic {
+    private Scene scene;
 
-    public static void main(String[] args) {
-        EngineConfig config = new EngineConfig(
-                WINDOW_TITLE,
-                WINDOW_WIDTH,
-                WINDOW_HEIGHT,
-                ENABLE_VSYNC
-        );
-        new Engine(config).run(new GameLogic() {
-            @Override
-            public void init(Engine engine) {
-                engine.createScene(MAIN_SCENE);
-            }
+    @Override
+    public void init(Engine engine) {
+        scene = engine.createScene("main");
+        scene.createObject("ground", MeshFactory.plane(40f), new Material());
+    }
 
-            @Override
-            public void update(float dt, Engine engine) {
-                // Update gameplay with the simulation-scaled delta.
-            }
-        });
+    @Override
+    public void update(float dt, Engine engine) {
+        // Use dt for simulation. It already includes simulation time scaling.
     }
 }
 ```
@@ -48,19 +35,15 @@ Resources use classpath paths: shaders under `/shaders/`, sounds under `/sounds/
 
 Use `Engine.getFPS()` for the current measured frame rate. Dispose the engine once at shutdown.
 
-## Recommended project structure
+## Dependencies
 
-```text
-src/main/java/
-  game/
-    Main.java
-    Game.java
-    world/
-    ui/
-src/main/resources/
-  shaders/
-  sounds/
-  textures/
-```
+The engine uses LWJGL OpenGL, GLFW, OpenAL, STB, and Assimp natives. Keep the
+engine dependency and matching native runtime artifacts together. FBX support
+requires the Assimp native library supplied by the engine Gradle module.
 
-Keep game-specific code outside the engine package. Store resource IDs and tuning values in named constants or configuration classes instead of repeating literals.
+## Resource ownership
+
+Create OpenGL-backed `Texture`, `Mesh`, `Shader`, `Skybox`, and `Framebuffer`
+objects after the engine has created its context. Do not load them from worker
+threads unless the worker owns a valid shared context. Release scene and engine
+resources through `Engine.dispose()`.
